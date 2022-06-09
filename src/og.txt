@@ -1,0 +1,101 @@
+import { useEffect, useState } from 'react';
+import './App.css';
+
+
+// https://restcountries.com/v3.1/all
+// https://restcountries.com/v3.1/alpha/usa
+  const SelectedCurrency = (props) => {
+    if (!props.currency) {
+      return null;
+    }
+    
+    return (
+      <p>The selected currency is <strong>{props.currency.name} ({props.currency.symbol})</strong></p>
+    )
+  }
+
+  
+  const CurrencySelecter = () => {
+    let [selectedCurrency, setSelectedCurrency] = useState(null);
+    const [currencyHash, setCurrencyHash] = useState(null);
+    const apiUrl = "https://restcountries.com/v3.1/all";
+       
+    // #1
+    // call 'https://restcountries.com/v3.1/all'
+    // This will return a list of county data. Merge the currencies to a single hashMap. Save to "currencyHash" state
+    // I.E. currencyHash = {
+    //    EUR: {
+    //      name: "Euro",
+    //      symbol: "€" 
+    //    }
+    // }
+
+    const getCountries = function() {
+      fetch(apiUrl)
+        .then((res) => res.json())
+        .then((countriesData) => {
+          const currencyHashData = {}
+          countriesData.map(({currencies}) => {            
+            if(currencies) {
+              for(const [key, value] of Object.entries(currencies)) {
+                if(!currencyHashData[key]) {
+                  currencyHashData[key] = value;
+                }
+              }             
+            }
+          });
+
+          setCurrencyHash(currencyHashData);          
+        })
+    }
+    // on load, call   
+    useEffect(() => {      
+      getCountries();
+    }, []);
+
+    
+    const handleChange = (e) => {
+      setSelectedCurrency(e.target.value);
+    }  
+
+    return (
+      <div>
+        <form>
+          <select onChange={handleChange}>
+            {currencyHash && Object.entries(currencyHash).map(([key, value]) => {                   
+                <option key="" value={key}>{currencyHash[key].name}</option>
+              })
+            }
+          </select>
+        </form>
+      
+        <SelectedCurrency currency={selectedCurrency} />
+      </div>
+    );
+    // #3
+    // Add an event handler that, when the select field is changed, will resolve the value to the currency object and save it to  the "selectedCurrency" state
+    // I.E. (selected EURO)
+    // selectedCurrency = {
+    //    name: "Euro",
+    //    symbol: "€" 
+    // }
+    
+    // #2
+    // In the form add a select box where each currency
+    // from the "currencyHash" are options in the select.
+    // the currency id will be the value and the name will be the text
+    // I.E.
+    // <option value="EUR">Euro</option>
+  
+  
+}
+
+function App() {
+  return (
+    <div className="App">
+      <CurrencySelecter />
+    </div>
+  );
+}
+
+export default App;

@@ -1,23 +1,14 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
+import CurrencySelecter from './components/currency-selecter/currency-selecter.component';
 import './App.css';
+
+// https://restcountries.com/v3.1/all
+// https://restcountries.com/v3.1/alpha/usa
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <CurrencySelecter />
     </div>
   );
 }
